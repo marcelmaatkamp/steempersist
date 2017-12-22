@@ -151,6 +151,9 @@ class SteemPersist:
         if not full_name in p.state:
             p.state[full_name] = dict()
         return PersistentDict(full_name)
+    def sync(self):
+        global p
+        p.sync()
     def set_handler(self,event,handler):
         self.handlers[event] = handler
         self.handled.add(event)
