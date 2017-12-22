@@ -6,7 +6,6 @@ import dateutil.parser
 
 #Don't let 100% voting power go to waste, use it. This function returns true if our voting power is higher than 99.85%
 def must_vote(account,minvp):
-    print(account,minvp)
     stm=steem.steemd.Steemd()
     acc = stm.get_account(account)
     vp = acc["voting_power"]
