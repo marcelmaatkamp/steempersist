@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 #A simple demo script for demonstrating the use of steempersist
 from steempersist import SteemPersist
+from steemutils import must_vote
 import hashlib
 import mycredentials
 import steem
@@ -8,18 +9,6 @@ import datetime
 import dateutil
 import dateutil.parser
 import syslog
-
-#Don't let 100% voting power go to waist, use it. This function returns true if our voting power is higher than 99.85%
-def must_vote(account):
-    stm=steem.Steem()
-    account = stm.get_account(account)
-    vp = account["voting_power"]
-    lvt = account["last_vote_time"]
-    more_vp = int((datetime.datetime.utcnow() - dateutil.parser.parse(lvt)).total_seconds() / 43.2)
-    full_vp = vp + more_vp
-    if full_vp > 9985:
-        return True
-    return False
 
 #Event handler for short comments.
 class AntiCommentBotBot:
@@ -53,7 +42,7 @@ class AntiCommentBotBot:
                     stm.commit.custom_json("follow",json,required_posting_auths=[mycredentials.account])
     def vote(self,time,event):
         #A reply post by a known spam bot that got upvoted, this might be a spam comment, if we must vote, we need to do something here.
-        if self.pers["spambots"][event["author"]] and event["weight"] > 10 and event["permlink"][:3] == "re-" and must_vote(mycredentials.account):
+        if self.pers["spambots"][event["author"]] and event["weight"] > 10 and event["permlink"][:3] == "re-" and must_vote(mycredentials.account,9985):
                 #We need to use our posting key to downvote.
                 stm=steem.Steem([],keys=mycredentials.keys)
                 #The permlink of the spambot post we wish to downvote.
