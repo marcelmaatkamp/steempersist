@@ -76,7 +76,6 @@ def stream_blockchain_events(sbs,handled,pname):
                 #Skip already processed transactions from block if needed.
                 if skipfirst >= trx_no:
                     pass
-                    #syslog.syslog("SKIP "+str(block_no)+ " " + str(trx_no) + " " + str(op_no))
                 else:
                     sync = False
                     if lop[0] in handled:
@@ -93,7 +92,8 @@ def stream_blockchain_events(sbs,handled,pname):
                         #Log how far are we behind on the HEAD of the blockchain?
                         behind = datetime.datetime.utcnow() - \
                                  dateutil.parser.parse(entry["timestamp"])
-                        syslog.syslog("[block " + str(block_no) + " tx " + \
+                        if op_no == 0 and trx_no == 0:
+                            syslog.syslog("[block " + str(block_no) + " tx " + \
                                       str(trx_no) + "op" + str(op_no) +"] behind " + \
                                       str(behind))
                 now = time.time()
@@ -133,7 +133,7 @@ class PersistentDict:
     def __setitem__(self,key,val):
         global p
         p.state[self.name][key] = val
-    def __clear__(self):
+    def clear(self):
         p.state[self.name] = dict()
 
 class SteemPersist:
@@ -154,6 +154,10 @@ class SteemPersist:
     def set_handler(self,event,handler):
         self.handlers[event] = handler
         self.handled.add(event)
+    def set_handlers(self,obj):
+        for key in dir(obj):
+            if key[0] != "_":
+                self.set_handler(key,getattr(obj,key))
     def __call__(self):
         if len(self.handled) > 0:
             for r in stream_blockchain_events(self.blockchain,self.handled,self.name):

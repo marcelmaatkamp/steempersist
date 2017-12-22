@@ -2,6 +2,8 @@
 #A simple demo script for demonstrating the use of steempersist
 from steempersist import SteemPersist
 import hashlib
+import mycredentials
+import steem
 
 #Event handler for short comments.
 class Demo:
@@ -24,14 +26,17 @@ class Demo:
             if self.pers["postdigestcount"][digest] > 3:
                 if self.pers["spambots"][event["author"]] == None:
                     self.pers["spambots"][event["author"]] = True
-                    print("Detected a new spam comment bot: @"+event["author"]) 
-                    #FIXME: We may want to add a custom_json here in order to 'ignore' (mute) the spammer.
+                    print("Ignoring spam comment bot: @"+event["author"]) 
+                    stm=steem.Steem([],keys=mycredentials.keys)
+                    json=["follow",{"follower" : mycredentials.account, "following" : event["author"], "what" : ["ignore"]}]
+                    stm.commit.custom_json("follow",json,required_posting_auths=[mycredentials.account])
+                    print(" - done.")
     def clear(self,time,event):
         print("CLEAR")
         self.pers["postdigestcount"].clear()
 
 #Create the SteemPersist object
-pers = SteemPersist("persist-demo")
+pers = SteemPersist("demo-mute-comment-spammers")
 #Create a simple event handler, hand it the SteemPersist object for storing persistent meta info
 demo = Demo(pers)
 #Register the event handler as handler for "comment" events.
