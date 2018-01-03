@@ -14,8 +14,6 @@ class AMQP:
         self.pers=pers
         self.channel=channel
     def other(self,time,event):	
-        print(time, event)
-        message = json.dumps(event)
         channel.basic_publish(exchange=os.environ.get('RABBITMQ_EXCHANGE'), routing_key='', body=json.dumps(event))
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get('RABBITMQ_HOSTNAME')))
