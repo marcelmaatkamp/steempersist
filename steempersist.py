@@ -86,7 +86,7 @@ def stream_blockchain_events(sbs,handled,pname):
                             unhandled.add(lop[0])
                             syslog.syslog("Unhandled event type: " + lop[0])
                         if "other" in handled:
-                            yield ["other",event_time, lop[1]]
+                            yield ["other",event_time, {"type" : lop[0], "event" : lop[1]}]
                     #Inform the Progress object of our latest progress.
                     if p(block_no, trx_no, op_no, sync):
                         #If our progress resulted in an explicit or implicit SYNC,
