@@ -34,6 +34,12 @@ Next to the core *SteemPersist* andsome misc utils, this repo also contains a nu
 away-trust-friends-bot.py
 ===
 
+```
+$ cp mycredentials-example.py credentials.py
+$ vi credentials.py
+$ docker-compose up -d away
+```
+
 This script will help to not let your excess voting power go to waste. The script acts on a provided list of *friends*. The idea is that when you are *away* from steemit for a longer time, your voring strength may grow to 100% and stay there for a long time. This means two things:
 
 1) You miss the chance to earn curation rewards
