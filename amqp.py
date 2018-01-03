@@ -7,6 +7,7 @@ import syslog
 
 import pika
 import json
+import os
 
 class AMQP:
     def __init__(self,pers,channel):
@@ -15,9 +16,9 @@ class AMQP:
     def other(self,time,event):	
         print(time, event)
         message = json.dumps(event)
-        channel.basic_publish(exchange='steemit', routing_key='', body=json.dumps(event))
+        channel.basic_publish(exchange=os.environ.get('RABBITMQ_EXCHANGE'), routing_key='', body=json.dumps(event))
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.20.0.5'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get('RABBITMQ_HOSTNAME')))
 channel = connection.channel()
 
 pers = SteemPersist("amqp")
