@@ -4,6 +4,7 @@ import mycredentials
 from steemutils import must_vote
 import steem
 import syslog
+#import fakesyslog as syslog
 
 class PayBots:
     def __init__(self,persistent):
