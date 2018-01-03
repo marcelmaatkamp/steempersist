@@ -47,6 +47,13 @@ This script will help to not let your excess voting power go to waste. The scrip
 
 Now if you have been on steemit for a while, chances are you have met a few people who share your interests, and basically vote like you would have voted. Well, the script uses that fact. When you vote yourself, the script willdo nothing. But when at any time your voting strength grows above 97%, the script will assume that you are *away* and will follow the vote of the next *friend* that votes on anything at the exact same weight as used by your friend.
 
+
+paybothater.py
+===
+There are a lot of pay bots on steemit. Paybots that sell votes for money and paybots that resteem for money will take a steemit
+URL in their transactions that are than acted uppon. Paybots like these never actually add value to steemit. Using the *paybothater* script, allows you to use your *away* voting power to clean up the steemit eccosystem a bit by downvoting not the paybots themselves but those that pay for their services. This little bot will use voting power that would otherwise go unused to downvote random paybot users at 10% of voting power.   
+
+
 anti-comment-bot-bot.py
 ===
 
