@@ -3,6 +3,7 @@ from steempersist import SteemPersist
 import mycredentials
 from steemutils import must_vote
 import steem
+import syslog
 
 class PayBots:
     def __init__(self,persistent):
@@ -15,17 +16,17 @@ class PayBots:
             if self.persistent["paybot"][bot] == None:
                 self.persistent["paybot"][bot] = 0
             self.persistent["paybot"][bot] = self.persistent["paybot"][bot] + 1
-            if self.persistent["paybot"][bot] % 10 == 0 and must_vote(mycredentials.account,9985):
+            postlink = memo[len(urlstart):].split()[0]
+            postlink = postlink.split("/",1)[1]
+            if must_vote(mycredentials.account,9800):
+                syslog.syslog("Downvoting "+postlink+ " because of "+ bot + "paybot usage")
                 stm=steem.Steem([],keys=mycredentials.keys)
-                postlink = memo[len(urlstart):].split()[0]
-                print("Downvoting",postlink)
                 try:
-                    postlink = postlink.split("/",1)[1]
-                    print(postlink)
-                    stm.vote(postlink,-10.0,mycredentials.account)
-                    print("OK")
+                    stm.vote(postlink,-7.0,mycredentials.account)
                 except:
-                    print("FAIL")
+                    syslog.syslog("Failed to downvote. Possibly too low percentage set for downvoting.")
+            else:
+                syslog.syslog("NOT flagging '"+event["from"]+ "' for '"+ bot + "' paybot usage.")
 
 sp = SteemPersist("paybothater")  
 pb = PayBots(sp)
