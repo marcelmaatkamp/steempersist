@@ -6,6 +6,7 @@ import datetime
 import time
 import syslog
 import hashlib
+import copy
 p = None
 
 #Helper class for keeping some state synced to a JSON file all the time. This should allow the bot
@@ -147,12 +148,30 @@ class SteemPersist:
         self.blockchain = steem.blockchain.Blockchain(self.steemd)
         self.handlers = dict()
         self.handled = set()
+        self.config = dict()
+        self.default_config = dict()
+        try:
+            with open("steempersist_config.json") as pjson:
+                confs = json.loads(pjson.read())
+                if "default" in confs and isinstance(confs["default"],dict):
+                    self.default_config = confs["default"]
+                    self.config = confs["default"]
+                if name in confs and isinstance(confs[name],dict):
+                    self.config = confs[name]
+        except:
+            syslog.syslog("Error: unable to open or process steempersist_config.json")
     def __getitem__(self,name):
         global p
         full_name = "cd_" + name
         if not full_name in p.state:
             p.state[full_name] = dict()
         return PersistentDict(full_name)
+    def get_config(self,name,default):
+        if name in self.config:
+            return copy.deepcopy(self.config[name])
+        if name in self.default_config:
+            return copy.deepcopy(self.default_config[name])
+        return default
     def sync(self):
         global p
         p.sync()

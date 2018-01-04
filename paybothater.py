@@ -9,6 +9,8 @@ import syslog
 class PayBots:
     def __init__(self,persistent):
         self.persistent = persistent
+        self.flag_weight = 0.0 - self.persistent.get_config("min_vote",10.0)
+        self.away_treshold = self.persistent.get_config("away_treshold",9800)
     def transfer(self,time,event):
         urlstart = "https://steemit.com/"
         memo = event["memo"]
@@ -20,11 +22,11 @@ class PayBots:
             postlink = memo[len(urlstart):].split()[0]
             if "/" in postlink:
                 postlink = postlink.split("/",1)[1]
-                if must_vote(mycredentials.account,9800):
+                if must_vote(mycredentials.account,self.away_treshold):
                     syslog.syslog("Downvoting "+postlink+ " because of "+ bot + " paybot usage")
                     stm=steem.Steem([],keys=mycredentials.keys)
                     try:
-                        stm.vote(postlink,-7.0,mycredentials.account)
+                        stm.vote(postlink,self.flag_weight,mycredentials.account)
                     except:
                         syslog.syslog("Failed to downvote. Possibly too low percentage set for downvoting.")
                 else:

@@ -1,6 +1,6 @@
 {
   "default" : {
-      "away_treshold" : 98.0 ,
+      "away_treshold" : 9300 ,
       "max_vote" : 21.0 ,
       "min_vote" : 7.0 ,
       "sources" : ["steemcleaners","mattockfs"],
