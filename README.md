@@ -68,6 +68,10 @@ The *anti-comment-bot-bot* is currently still under construction, so please don'
 
 Just like the previous script, this script will only perform triggered actions if the voting weight of it's owner is (very close to) 100%. For this script, 99.85%. If the script detects a new comment by a comment bot, it will downvote to compensate. At this moment in time, using 10% of it's owner total voting weight.
 
- 
+# amqp
+
+```
+RABBITMQ_HOSTNAME=172.20.0.5 RABBITMQ_EXCHANGE=steemit python3 amqp.py
+``` 
 
 
