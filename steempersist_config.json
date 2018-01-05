@@ -1,8 +1,9 @@
 {
   "default" : {
-      "away_treshold" : 9300 ,
-      "max_vote" : 21.0 ,
-      "min_vote" : 7.0 ,
+      "away_treshold" : 8000 ,
+      "max_vote" : 30.0 ,
+      "min_vote" : 10.0 ,
+      "test_mode" : true ,
       "sources" : ["steemcleaners","mattockfs"],
       "modules" : ["commentbots","static"],
       "static" : {

@@ -3,8 +3,9 @@ import steem
 import datetime
 import dateutil
 import dateutil.parser
+import time
+import syslog
 
-#Don't let 100% voting power go to waste, use it. This function returns true if our voting power is higher than 99.85%
 def must_vote(account,minvp):
     stm=steem.steemd.Steemd()
     acc = stm.get_account(account)
@@ -17,4 +18,50 @@ def must_vote(account,minvp):
             return True
     return False
 
+class AwayVote:
+    def __init__(self,account,keys,demo_mode=False):
+        self.account = account
+        self.keys = keys
+        self.demo_mode = demo_mode
+        self.queue = []
+        self.stm = steem.steemd.Steemd()
+        acc = self.stm.get_account(account)
+        self.lvt = dateutil.parser.parse(acc["last_vote_time"])
+        self.lvp = acc["voting_power"]
+        self.newer_own_vote = False
+    def must_vote(self,treshold):
+        cur_max_vp = int((datetime.datetime.utcnow() - self.lvt).total_seconds() / 43.2) + self.lvp
+        #If the VP cant have gone up enough even without votes, simply return false
+        if cur_max_vp < treshold:
+            return False
+        self.stm = steem.steemd.Steemd()
+        acc = self.stm.get_account(self.account)
+        lvt = dateutil.parser.parse(acc["last_vote_time"])
+        if lvt == self.lvt and self.newer_own_vote:
+            #We can't trust the current lvt yet, need to return false for now.
+            return False
+        self.lvt = lvt
+        self.lvp = acc["voting_power"]
+        self.newer_own_vote = False
+        max_vp = int((datetime.datetime.utcnow() - self.lvt).total_seconds() / 43.2) + self.lvp
+        if cur_max_vp < treshold:
+            return False
+        return True
+    def vote(self,permlink,percentage):
+        stm=steem.Steem([],keys=self.keys)
+        try:
+            stm.vote(permlink,percentage,self.account)
+            self.newer_own_vote = True
+            return True
+        except:
+            print("Error: Failed to vote. Possibly too low percentage set for voting or too low current voting power.")
+            return False
+    def upvote(self,permlink,percentage):
+        return self.vote(permlink,abs(percentage))
+    def downvote(self,permlink,percentage):
+        if self.demo_mode:
+            syslog.syslog("NOTE: Downvote of "+permlink+" in demo mode:  changing to an upvote instead.")
+            #In demo mode, downvotes are turned to upvotes.
+            return self.vote(permlink,abs(percentage))
+        return self.vote(permlink,0.0 - abs(percentage))
 
