@@ -6,8 +6,8 @@
       "sources" : ["steemcleaners","mattockfs"],
       "modules" : ["commentbots","static"],
       "static" : {
-	      "posts" : ["randystiefer"],
-	      "comments" : ["randystiefer"]
+	      "posts" : ["randystiefer","mahisamim"],
+	      "comments" : ["randystiefer","mahisamim"]
       }
   }
 }

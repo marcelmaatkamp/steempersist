@@ -13,7 +13,6 @@ def must_vote(account,minvp):
     more_vp = int((datetime.datetime.utcnow() - dateutil.parser.parse(lvt)).total_seconds() / 43.2)
     if more_vp > 4: #Attempt to fight the stuck at one value issue with the steemit API
         full_vp = vp + more_vp
-        print(full_vp,minvp)
         if full_vp > minvp:
             return True
     return False
