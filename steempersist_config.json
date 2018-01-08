@@ -1,15 +1,15 @@
 {
   "default" : {
-      "away_treshold" : 8000 ,
+      "away_treshold" : 9750 ,
       "max_vote" : 30.0 ,
       "min_vote" : 10.0 ,
-      "test_mode" : true ,
-      "sources" : ["steemcleaners","mattockfs"],
-      "modules" : ["commentbots","static"],
-      "nodes" : ["seed.bitcoiner.me"],
-      "static" : {
-	      "posts" : ["randystiefer","mahisamim"],
-	      "comments" : ["randystiefer","mahisamim"]
-      }
+      "nodes" : ["seed.bitcoiner.me"]
+  },
+  "awaybot-trust-friends" : {
+      "away_treshold" : 9500 ,
+      "max_vote" : 33.33
+  },
+  "awaybot-votebotvotes" : {
+      "test_mode" : true
   }
 }

@@ -18,6 +18,13 @@ def must_vote(account,minvp):
             return True
     return False
 
+def is_blogpost(nodes,author,permlink):
+   stm=steem.steemd.Steemd(nodes)
+   c = stm.get_content(author,permlink)
+   if c != None and (c["parent_author"] == None or c["parent_author"] == ""):
+       return True
+   return False
+
 class AwayVote:
     def __init__(self,account,keys,demo_mode=False,nodes=[]):
         self.account = account
@@ -25,6 +32,7 @@ class AwayVote:
         self.keys = keys
         self.demo_mode = demo_mode
         self.queue = []
+        syslog.syslog("AwayVote using nodes " + str(self.nodes))
         self.stm = steem.steemd.Steemd(self.nodes)
         acc = self.stm.get_account(account)
         self.lvt = dateutil.parser.parse(acc["last_vote_time"])
@@ -49,6 +57,7 @@ class AwayVote:
             return False
         return True
     def vote(self,permlink,percentage):
+        syslog.syslog("Voting using nodes " + str(self.nodes))
         stm=steem.Steem(self.nodes,keys=self.keys)
         try:
             stm.vote(permlink,percentage,self.account)

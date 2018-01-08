@@ -164,6 +164,10 @@ class SteemPersist:
         self.nodes = []
         if "nodes" in self.config:
             self.nodes = self.config["nodes"]
+        else:
+            if "nodes" in self.default_config:
+                self.nodes = self.default_config["nodes"]
+        syslog.syslog("Using nodes " + str(self.nodes))
         self.steemd = steem.steemd.Steemd(self.nodes)
         self.blockchain = steem.blockchain.Blockchain(self.steemd)
         syslog.syslog("setup done")
