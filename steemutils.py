@@ -19,12 +19,13 @@ def must_vote(account,minvp):
     return False
 
 class AwayVote:
-    def __init__(self,account,keys,demo_mode=False):
+    def __init__(self,account,keys,demo_mode=False,nodes=[]):
         self.account = account
+        self.nodes=nodes
         self.keys = keys
         self.demo_mode = demo_mode
         self.queue = []
-        self.stm = steem.steemd.Steemd()
+        self.stm = steem.steemd.Steemd(self.nodes)
         acc = self.stm.get_account(account)
         self.lvt = dateutil.parser.parse(acc["last_vote_time"])
         self.lvp = acc["voting_power"]
@@ -34,7 +35,7 @@ class AwayVote:
         #If the VP cant have gone up enough even without votes, simply return false
         if cur_max_vp < treshold:
             return False
-        self.stm = steem.steemd.Steemd()
+        #self.stm = steem.steemd.Steemd(self.nodes)
         acc = self.stm.get_account(self.account)
         lvt = dateutil.parser.parse(acc["last_vote_time"])
         if lvt == self.lvt and self.newer_own_vote:
@@ -48,7 +49,7 @@ class AwayVote:
             return False
         return True
     def vote(self,permlink,percentage):
-        stm=steem.Steem([],keys=self.keys)
+        stm=steem.Steem(self.nodes,keys=self.keys)
         try:
             stm.vote(permlink,percentage,self.account)
             self.newer_own_vote = True

@@ -11,7 +11,7 @@ class PayBots:
         self.persistent = persistent
         self.flag_weight = 0.0 - self.persistent.get_config("min_vote",10.0)
         self.away_treshold = self.persistent.get_config("away_treshold",9800)
-        self.aw_vote = AwayVote(mycredentials.account,mycredentials.keys,demo_mode=self.persistent.get_config("test_mode",False))
+        self.aw_vote = AwayVote(mycredentials.account,mycredentials.keys,demo_mode=self.persistent.get_config("test_mode",False),nodes=self.persistent.get_config("nodes",[]))
     def transfer(self,time,event):
         urlstart = "https://steemit.com/"
         memo = event["memo"]

@@ -65,7 +65,10 @@ def stream_blockchain_events(sbs,handled,pname):
             op_no = -1
             #A main loop that throws exceptions on a regular basis.
             #Start at the last block from the previous time this loop was run.
+            syslog.syslog("Entering main loop.")
             for entry in sbs.stream_from(p.state["block_no"]):
+                if first:
+                    syslog.syslog("main loop started")
                 block_no = entry["block"]
                 trx_no = entry["trx_in_block"]
                 op_no = entry["op_in_trx"]
@@ -144,8 +147,6 @@ class SteemPersist:
         self.name=name
         syslog.openlog(name,syslog.LOG_PID)
         syslog.syslog("START")
-        self.steemd = steem.steemd.Steemd()
-        self.blockchain = steem.blockchain.Blockchain(self.steemd)
         self.handlers = dict()
         self.handled = set()
         self.config = dict()
@@ -160,6 +161,12 @@ class SteemPersist:
                     self.config = confs[name]
         except:
             syslog.syslog("Error: unable to open or process steempersist_config.json")
+        self.nodes = []
+        if "nodes" in self.config:
+            self.nodes = self.config["nodes"]
+        self.steemd = steem.steemd.Steemd(self.nodes)
+        self.blockchain = steem.blockchain.Blockchain(self.steemd)
+        syslog.syslog("setup done")
     def __getitem__(self,name):
         global p
         full_name = "cd_" + name
@@ -183,6 +190,7 @@ class SteemPersist:
             if key[0] != "_":
                 self.set_handler(key,getattr(obj,key))
     def __call__(self):
+        syslog.syslog("Run started")
         if len(self.handled) > 0:
             for r in stream_blockchain_events(self.blockchain,self.handled,self.name):
                 self.handlers[r[0]](r[1],r[2])

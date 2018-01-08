@@ -6,6 +6,7 @@
       "test_mode" : true ,
       "sources" : ["steemcleaners","mattockfs"],
       "modules" : ["commentbots","static"],
+      "nodes" : ["seed.bitcoiner.me"],
       "static" : {
 	      "posts" : ["randystiefer","mahisamim"],
 	      "comments" : ["randystiefer","mahisamim"]
