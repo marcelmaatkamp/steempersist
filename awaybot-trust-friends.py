@@ -4,7 +4,7 @@ from steempersist import SteemPersist
 from steemutils import must_vote
 import mycredentials
 import steem
-import syslog
+import fakesyslog as syslog
 
 #Event handler for short comments.
 class AwayTrustFriendsBot:

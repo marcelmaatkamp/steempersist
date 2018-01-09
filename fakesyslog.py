@@ -1,3 +1,5 @@
+LOG_PID = 0
+
 def syslog(msg):
     print(msg)
 
