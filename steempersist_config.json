@@ -1,0 +1,15 @@
+{
+  "default" : {
+      "away_treshold" : 9750 ,
+      "max_vote" : 30.0 ,
+      "min_vote" : 10.0 ,
+      "nodes" : ["seed.bitcoiner.me"]
+  },
+  "awaybot-trust-friends" : {
+      "away_treshold" : 9500 ,
+      "max_vote" : 33.33
+  },
+  "awaybot-votebotvotes" : {
+      "test_mode" : true
+  }
+}
