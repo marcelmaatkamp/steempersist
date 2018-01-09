@@ -4,7 +4,9 @@ services:
  away:
   restart: always
   build: .
-  command: python awaybot-trust-friends.py
+  command: python -u awaybot-trust-friends.py
+  environment:
+   - PYTHONUNBUFFERED=0
   volumes:
    - ./credentials.py:/app/mycredentials.py
   extra_hosts:

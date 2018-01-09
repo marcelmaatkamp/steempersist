@@ -1,4 +1,4 @@
-LOG_PID = 0
+LOG_PID = 1
 
 def syslog(msg):
     print(msg)

@@ -27,6 +27,7 @@ class AwayTrustFriendsBot:
                     syslog.syslog("FAIL")
 
 #Create the SteemPersist object
+print("starting awaybot-trust-friends..")
 pers = SteemPersist("awaybot-trust-friends")
 #Create a simple event handler, hand it the SteemPersist object for storing persistent meta info
 atf = AwayTrustFriendsBot(pers)
