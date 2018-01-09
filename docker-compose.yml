@@ -7,6 +7,8 @@ services:
   command: python away-trust-friends-bot.py
   volumes:
    - ./credentials.py:/app/mycredentials.py
+  extra_hosts:
+   - "steemd.steemit.com:34.225.141.27"
 
  amqp:
   restart: always
